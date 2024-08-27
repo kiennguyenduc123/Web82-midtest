@@ -144,7 +144,7 @@ app.put('/posts/:id', async (req,res,next) => {
     const { content } = req.body;
     try {
         const post = await PostModel.findById(postId);
-        if (!post) return res.status(404).json({ message: 'Bài viết không tồn tại' });
+        if (!post) throw new Error('Bài viết không tồn tại')
 
         // Cập nhật bài post
         post.content = content;
@@ -156,7 +156,10 @@ app.put('/posts/:id', async (req,res,next) => {
             data: updatedPost
         });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi cập nhật bài viết', error: error.message });
+        res.status(500).send({ 
+            message: 'Lỗi khi cập nhật bài viết', 
+            error: error.message 
+        });
     }
 });
 
